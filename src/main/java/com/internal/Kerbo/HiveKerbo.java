@@ -7,7 +7,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.hadoop.security.UserGroupInformation;
-
+/**
+ * 
+ * Not working 
+ * 
+ * @author Raktotpal
+ *
+ */
 public class HiveKerbo {
 	public static void main(String[] args) throws SQLException, IOException {
 		String url = "jdbc:hive2://ec2-52-3-170-100.compute-1.amazonaws.com:10000/avp_b2m;"
