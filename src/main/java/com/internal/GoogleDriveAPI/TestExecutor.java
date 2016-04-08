@@ -6,6 +6,7 @@ import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.FileContent;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.client.json.JsonFactory;
@@ -111,5 +112,50 @@ public class TestExecutor {
             }
         }
     }
+    
+    
+    
+    /**
+     * Insert new file.
+     *
+     * @param service Drive API service instance.
+     * @param title Title of the file to insert, including the extension.
+     * @param description Description of the file to insert.
+     * @param parentId Optional parent folder's ID.
+     * @param mimeType MIME type of the file to insert.
+     * @param filename Filename of the file to insert.
+     * @return Inserted file metadata if successful, {@code null} otherwise.
+     */
+    private static File insertFile(Drive service, String description,
+        String parentId, String mimeType, String filename) {
+      // File's metadata.
+      File body = new File();
+//      body.setTitle(title);
+      body.setDescription(description);
+      body.setMimeType(mimeType);
 
-}
+      // Set the parent folder.
+      if (parentId != null && parentId.length() > 0) {
+//        body.setParents(
+//            Arrays.asList(new ParentReference().setId(parentId)));
+      }
+
+      // File's content.
+      java.io.File fileContent = new java.io.File(filename);
+      FileContent mediaContent = new FileContent(mimeType, fileContent);
+//      try {
+//        File file = service.files().insert(body, mediaContent).execute();
+
+        // Uncomment the following line to print the File ID.
+        // System.out.println("File ID: " + file.getId());
+
+//        return file;
+    	  return null;
+//      } catch (IOException e) {
+//        System.out.println("An error occured: " + e);
+//        return null;
+//      }
+    }
+
+    // ...
+  }

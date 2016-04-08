@@ -13,10 +13,12 @@ public class TextParser {
 	public static void main(final String[] args) throws IOException,
 			SAXException, TikaException {
 
+		System.out.println("Hi .............");
+		
 		// detecting the file type
 		BodyContentHandler handler = new BodyContentHandler();
 		Metadata metadata = new Metadata();
-		FileInputStream inputstream = new FileInputStream(new File("C:\\Users\\Raktotpal\\Desktop\\sparkTest.txt"));
+		FileInputStream inputstream = new FileInputStream(new File("C:\\Users\\RAKTOTPAL\\Desktop\\TICKET HYD-GHY\\NF7202055814469.Invoice.pdf"));
 		
 		ParseContext pcontext = new ParseContext();
 
