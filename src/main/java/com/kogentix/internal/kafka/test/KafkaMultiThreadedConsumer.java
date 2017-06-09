@@ -26,14 +26,11 @@ public class KafkaMultiThreadedConsumer {
 		}
 
 		public void run() {
-			System.out.println("This is thread " + tnum);
+			System.out.println("This is thread - " + tnum);
 
 			ConsumerIterator<byte[], byte[]> it = kfs.iterator();
-			int i = 1;
 			while (it.hasNext()) {
-				System.out.println(tnum + " " + i + ": "
-						+ new String(it.next().message()));
-				++i;
+				System.out.println(Thread.currentThread().getName() + " ::: " + tnum + new String(it.next().message()));
 			}
 		}
 	}
@@ -46,7 +43,7 @@ public class KafkaMultiThreadedConsumer {
 	public static void main(String[] args) {
 		Properties props = new Properties();
 		props.put("zookeeper.connect", "localhost:2181");
-		props.put("group.id", "mygroupid2");
+		props.put("group.id", "test-consumer-group");
 		props.put("zookeeper.session.timeout.ms", "413");
 		props.put("zookeeper.sync.time.ms", "203");
 		props.put("auto.commit.interval.ms", "1000");
@@ -55,7 +52,7 @@ public class KafkaMultiThreadedConsumer {
 		ConsumerConfig cf = new ConsumerConfig(props);
 		ConsumerConnector consumer = Consumer.createJavaConsumerConnector(cf);
 
-		String topic = "javatopic";
+		String topic = "rpal-multi-part";
 
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
 		topicCountMap.put(topic, new Integer(3));
@@ -72,5 +69,16 @@ public class KafkaMultiThreadedConsumer {
 			++threadnum;
 		}
 		// consumer.shutdown();
+		
+//		for (KafkaStream<byte[], byte[]> stream : streams) {
+//      ConsumerIterator<byte[], byte[]> consumerIte = stream.iterator();
+//      threadnum++;
+//
+//      while (consumerIte.hasNext())
+//        System.out.println("Message from thread :: " + threadnum + " -- "
+//            + new String(consumerIte.next().message()));
+//      // executor.execute(new KafkaPartitionConsumer(threadnum, stream));
+//      // ++threadnum;
+//    }
 	}
 }

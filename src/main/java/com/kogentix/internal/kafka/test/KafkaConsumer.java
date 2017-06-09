@@ -14,11 +14,11 @@ import kafka.javaapi.consumer.ConsumerConnector;
 public class KafkaConsumer {
 	
 	public static void main(String[] args) {
-		String group = args[0] ;
+		//String group = args[0] ;
 		
 		Properties props = new Properties();
         props.put("zookeeper.connect", "localhost:2181");
-        props.put("group.id", group);
+        props.put("group.id", "test-consumer-group");
         props.put("zookeeper.session.timeout.ms", "413");
         props.put("zookeeper.sync.time.ms", "203");
         props.put("auto.commit.interval.ms", "1000");
@@ -28,7 +28,7 @@ public class KafkaConsumer {
         
         ConsumerConnector consumer = Consumer.createJavaConsumerConnector(cf) ;
         
-        String topic = "javatopic" ;
+        String topic = "rpal-01" ;
         
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
 		topicCountMap.put(topic, new Integer(1));
