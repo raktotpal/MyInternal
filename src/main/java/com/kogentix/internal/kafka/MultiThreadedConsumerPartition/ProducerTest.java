@@ -3,9 +3,6 @@ package com.kogentix.internal.kafka.MultiThreadedConsumerPartition;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-//import kafka.producer.Producer;
-//import kafka.producer.KeyedMessage;
-//import kafka.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
