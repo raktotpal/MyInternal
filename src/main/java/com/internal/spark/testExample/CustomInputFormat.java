@@ -11,9 +11,8 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 
 public class CustomInputFormat extends FileInputFormat<LongWritable, Text> {
 
-	@Override
-	public RecordReader<LongWritable, Text> createRecordReader(InputSplit arg0,
-			TaskAttemptContext arg1) throws IOException, InterruptedException {
-		return new CustomLineRecordReader();
-	}
+  @Override public RecordReader<LongWritable, Text> createRecordReader(InputSplit arg0,
+      TaskAttemptContext arg1) throws IOException, InterruptedException {
+    return new CustomLineRecordReader();
+  }
 }

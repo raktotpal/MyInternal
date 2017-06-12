@@ -14,31 +14,30 @@ import com.internal.spring.mvc.rest.webService.POJO.Country;
 @RestController
 /* @RequestMapping("/hello") */
 public class CountryController {
-	@RequestMapping(value = "/countries", method = RequestMethod.GET, headers = "Accept=application/json")
-	public List<Country> getCountries() {
-		List<Country> listOfCountries = new ArrayList<Country>();
-		listOfCountries = createCountryList();
-		return listOfCountries;
-	}
-	
-	@RequestMapping(value = "/addStudent", method = RequestMethod.POST)
-	   public @ResponseBody List<Country> addStudent(@RequestBody List<Country> cnts) {
-	      
-	      return cnts;
-	   }
+  @RequestMapping(value = "/countries", method = RequestMethod.GET, headers = "Accept=application/json") public List<Country> getCountries() {
+    List<Country> listOfCountries = new ArrayList<Country>();
+    listOfCountries = createCountryList();
+    return listOfCountries;
+  }
 
-	// Utiliy method to create country list.
-	public List<Country> createCountryList() {
-		Country indiaCountry = new Country("1", "India");
-		Country bhutanCountry = new Country("2", "Bhutan");
-		Country chinaCountry = new Country("4", "China");
-		Country nepalCountry = new Country("3", "Nepal");
+  @RequestMapping(value = "/addStudent", method = RequestMethod.POST) public @ResponseBody List<Country> addStudent(
+      @RequestBody List<Country> cnts) {
 
-		List<Country> listOfCountries = new ArrayList<Country>();
-		listOfCountries.add(indiaCountry);
-		listOfCountries.add(chinaCountry);
-		listOfCountries.add(nepalCountry);
-		listOfCountries.add(bhutanCountry);
-		return listOfCountries;
-	}
+    return cnts;
+  }
+
+  // Utiliy method to create country list.
+  public List<Country> createCountryList() {
+    Country indiaCountry = new Country("1", "India");
+    Country bhutanCountry = new Country("2", "Bhutan");
+    Country chinaCountry = new Country("4", "China");
+    Country nepalCountry = new Country("3", "Nepal");
+
+    List<Country> listOfCountries = new ArrayList<Country>();
+    listOfCountries.add(indiaCountry);
+    listOfCountries.add(chinaCountry);
+    listOfCountries.add(nepalCountry);
+    listOfCountries.add(bhutanCountry);
+    return listOfCountries;
+  }
 }

@@ -51,58 +51,56 @@ import org.apache.pig.data.TupleFactory;
  *
  */
 public class countAlgebricEvalFunc extends EvalFunc<Long> implements Algebraic {
-	@Override
-	public Long exec(Tuple input) throws IOException {
-		return count(input);
-	}
+  @Override public Long exec(Tuple input) throws IOException {
+    return count(input);
+  }
 
-	public String getFinal() {
-		return Final.class.getName();
-	}
+  public String getFinal() {
+    return Final.class.getName();
+  }
 
-	public String getInitial() {
-		return Initial.class.getName();
-	}
+  public String getInitial() {
+    return Initial.class.getName();
+  }
 
-	public String getIntermed() {
-		return Intermed.class.getName();
-	}
+  public String getIntermed() {
+    return Intermed.class.getName();
+  }
 
-	static public class Initial extends EvalFunc<Tuple> {
-		public Tuple exec(Tuple input) throws IOException {
-			return TupleFactory.getInstance().newTuple(count(input));
-		}
-	}
+  static public class Initial extends EvalFunc<Tuple> {
+    public Tuple exec(Tuple input) throws IOException {
+      return TupleFactory.getInstance().newTuple(count(input));
+    }
+  }
 
-	static public class Intermed extends EvalFunc<Tuple> {
-		public Tuple exec(Tuple input) throws IOException {
-			return TupleFactory.getInstance().newTuple(sum(input));
-		}
-	}
+  static public class Intermed extends EvalFunc<Tuple> {
+    public Tuple exec(Tuple input) throws IOException {
+      return TupleFactory.getInstance().newTuple(sum(input));
+    }
+  }
 
-	static public class Final extends EvalFunc<Long> {
-		public Long exec(Tuple input) throws IOException {
-			return (Long) sum(input);
-		}
-	}
+  static public class Final extends EvalFunc<Long> {
+    public Long exec(Tuple input) throws IOException {
+      return (Long) sum(input);
+    }
+  }
 
-	static protected Long count(Tuple input) throws ExecException {
-		Object values = input.get(0);
-		if (values instanceof DataBag)
-			return ((DataBag) values).size();
-		else if (values instanceof Map)
-			return new Long(((Map<?, ?>) values).size());
-		return null;
-	}
+  static protected Long count(Tuple input) throws ExecException {
+    Object values = input.get(0);
+    if (values instanceof DataBag)
+      return ((DataBag) values).size();
+    else if (values instanceof Map)
+      return new Long(((Map<?, ?>) values).size());
+    return null;
+  }
 
-	static protected Long sum(Tuple input) throws ExecException,
-			NumberFormatException {
-		DataBag values = (DataBag) input.get(0);
-		long sum = 0;
-		for (Iterator<Tuple> it = values.iterator(); it.hasNext();) {
-			Tuple t = it.next();
-			sum += (Long) t.get(0);
-		}
-		return sum;
-	}
+  static protected Long sum(Tuple input) throws ExecException, NumberFormatException {
+    DataBag values = (DataBag) input.get(0);
+    long sum = 0;
+    for (Iterator<Tuple> it = values.iterator(); it.hasNext();) {
+      Tuple t = it.next();
+      sum += (Long) t.get(0);
+    }
+    return sum;
+  }
 }

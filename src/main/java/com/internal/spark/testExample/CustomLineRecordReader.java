@@ -17,207 +17,196 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 import org.apache.hadoop.util.LineReader;
 
 public class CustomLineRecordReader extends RecordReader<LongWritable, Text> {
-	private long start;
-	private long pos;
-	private long end;
-	private LineReader in;
-	private int maxLineLength;
-	private LongWritable key = new LongWritable();
-	private Text value = new Text();
-	
-	private Pattern delimiterPattern;
-    private String delimiterRegex;
-    private final static Text EOL = new Text("\n");
+  private long start;
+  private long pos;
+  private long end;
+  private LineReader in;
+  private int maxLineLength;
+  private LongWritable key = new LongWritable();
+  private Text value = new Text();
 
-	/*
-	 * This method is used by the framework for cleanup after there are no more
-	 * key/value pairs to process.
-	 */
-	@Override
-	public void close() throws IOException {
-		if (in != null) {
-			in.close();
-		}
-	}
+  private Pattern delimiterPattern;
+  private String delimiterRegex;
+  private final static Text EOL = new Text("\n");
 
-	/**
-	 * This methods are used by the framework to give generated key/value pairs
-	 * to an implementation of Mapper. Be sure to reuse the objects returned by
-	 * these methods if at all possible!
-	 */
-	@Override
-	public LongWritable getCurrentKey() throws IOException,
-			InterruptedException {
-		return key;
-	}
+  /*
+   * This method is used by the framework for cleanup after there are no more
+   * key/value pairs to process.
+   */
+  @Override public void close() throws IOException {
+    if (in != null) {
+      in.close();
+    }
+  }
 
-	/**
-	 * This methods are used by the framework to give generated key/value pairs
-	 * to an implementation of Mapper. Be sure to reuse the objects returned by
-	 * these methods if at all possible!
-	 */
-	@Override
-	public Text getCurrentValue() throws IOException, InterruptedException {
-		return value;
-	}
+  /**
+   * This methods are used by the framework to give generated key/value pairs to
+   * an implementation of Mapper. Be sure to reuse the objects returned by these
+   * methods if at all possible!
+   */
+  @Override public LongWritable getCurrentKey() throws IOException, InterruptedException {
+    return key;
+  }
 
-	/*
-	 * Like the corresponding method of the InputFormat class, this is an
-	 * optional method used by the framework for metrics gathering.
-	 */
-	@Override
-	public float getProgress() throws IOException, InterruptedException {
-		if (start == end) {
-			return 0.0f;
-		} else {
-			return Math.min(1.0f, (pos - start) / (float) (end - start));
-		}
-	}
+  /**
+   * This methods are used by the framework to give generated key/value pairs to
+   * an implementation of Mapper. Be sure to reuse the objects returned by these
+   * methods if at all possible!
+   */
+  @Override public Text getCurrentValue() throws IOException, InterruptedException {
+    return value;
+  }
 
-	/**
-	 * This method takes as arguments the map task’s assigned InputSplit and
-	 * TaskAttemptContext, and prepares the record reader. For file-based input
-	 * formats, this is a good place to seek to the byte position in the file to
-	 * begin reading.
-	 */
-	@Override
-	public void initialize(InputSplit genericSplit, TaskAttemptContext context)
-			throws IOException, InterruptedException {
-		
-		Configuration job = context.getConfiguration();
-		
-		this.delimiterRegex = job.get("record.delimiter.regex");
-		delimiterPattern = Pattern.compile(delimiterRegex);
-		
-		// This InputSplit is a FileInputSplit
-		FileSplit split = (FileSplit) genericSplit;
+  /*
+   * Like the corresponding method of the InputFormat class, this is an optional
+   * method used by the framework for metrics gathering.
+   */
+  @Override public float getProgress() throws IOException, InterruptedException {
+    if (start == end) {
+      return 0.0f;
+    } else {
+      return Math.min(1.0f, (pos - start) / (float) (end - start));
+    }
+  }
 
-		// Retrieve configuration, and Max allowed
-		// bytes for a single record
-		
-		this.maxLineLength = job.getInt("mapred.linerecordreader.maxlength",
-				Integer.MAX_VALUE);
+  /**
+   * This method takes as arguments the map task’s assigned InputSplit and
+   * TaskAttemptContext, and prepares the record reader. For file-based input
+   * formats, this is a good place to seek to the byte position in the file to
+   * begin reading.
+   */
+  @Override public void initialize(InputSplit genericSplit, TaskAttemptContext context)
+      throws IOException, InterruptedException {
 
-		// Split "S" is responsible for all records
-		// starting from "start" and "end" positions
-		start = split.getStart();
-		end = start + split.getLength();
+    Configuration job = context.getConfiguration();
 
-		// Retrieve file containing Split "S"
-		final Path file = split.getPath();
-		FileSystem fs = file.getFileSystem(job);
-		FSDataInputStream fileIn = fs.open(split.getPath());
+    this.delimiterRegex = job.get("record.delimiter.regex");
+    delimiterPattern = Pattern.compile(delimiterRegex);
 
-		// If Split "S" starts at byte 0, first line will be processed
-		// If Split "S" does not start at byte 0, first line has been already
-		// processed by "S-1" and therefore needs to be silently ignored
-		boolean skipFirstLine = false;
-		if (start != 0) {
-			skipFirstLine = true;
-			// Set the file pointer at "start - 1" position.
-			// This is to make sure we won't miss any line
-			// It could happen if "start" is located on a EOL
-			--start;
-			fileIn.seek(start);
-		}
+    // This InputSplit is a FileInputSplit
+    FileSplit split = (FileSplit) genericSplit;
 
-		in = new LineReader(fileIn, job);
+    // Retrieve configuration, and Max allowed
+    // bytes for a single record
 
-		// If first line needs to be skipped, read first line
-		// and stores its content to a dummy Text
-		if (skipFirstLine) {
-			Text dummy = new Text();
-			// Reset "start" to "start + line offset"
-			start += in.readLine(dummy, 0,
-					(int) Math.min((long) Integer.MAX_VALUE, end - start));
-		}
+    this.maxLineLength = job.getInt("mapred.linerecordreader.maxlength", Integer.MAX_VALUE);
 
-		// Position is the actual start
-		this.pos = start;
-	}
+    // Split "S" is responsible for all records
+    // starting from "start" and "end" positions
+    start = split.getStart();
+    end = start + split.getLength();
 
-	/**
-	 * Like the corresponding method of the InputFormat class, this reads a
-	 * single key/ value pair and returns true until the data is consumed.
-	 */
-	@Override
-	public boolean nextKeyValue() throws IOException, InterruptedException {
-		// Current offset is the key
-		key.set(pos);
+    // Retrieve file containing Split "S"
+    final Path file = split.getPath();
+    FileSystem fs = file.getFileSystem(job);
+    FSDataInputStream fileIn = fs.open(split.getPath());
 
-		int newSize = 0;
+    // If Split "S" starts at byte 0, first line will be processed
+    // If Split "S" does not start at byte 0, first line has been already
+    // processed by "S-1" and therefore needs to be silently ignored
+    boolean skipFirstLine = false;
+    if (start != 0) {
+      skipFirstLine = true;
+      // Set the file pointer at "start - 1" position.
+      // This is to make sure we won't miss any line
+      // It could happen if "start" is located on a EOL
+      --start;
+      fileIn.seek(start);
+    }
 
-		// Make sure we get at least one record that starts in this Split
-		while (pos < end) {
+    in = new LineReader(fileIn, job);
 
-			// Read first line and store its content to "value"
-			newSize = readNext(value, maxLineLength,
-					Math.max((int) Math.min(Integer.MAX_VALUE, end - pos),
-							maxLineLength));
+    // If first line needs to be skipped, read first line
+    // and stores its content to a dummy Text
+    if (skipFirstLine) {
+      Text dummy = new Text();
+      // Reset "start" to "start + line offset"
+      start += in.readLine(dummy, 0, (int) Math.min((long) Integer.MAX_VALUE, end - start));
+    }
 
-			// No byte read, seems that we reached end of Split
-			// Break and return false (no key / value)
-			if (newSize == 0) {
-				break;
-			}
+    // Position is the actual start
+    this.pos = start;
+  }
 
-			// Line is read, new position is set
-			pos += newSize;
+  /**
+   * Like the corresponding method of the InputFormat class, this reads a single
+   * key/ value pair and returns true until the data is consumed.
+   */
+  @Override public boolean nextKeyValue() throws IOException, InterruptedException {
+    // Current offset is the key
+    key.set(pos);
 
-			// Line is lower than Maximum record line size
-			// break and return true (found key / value)
-			if (newSize < maxLineLength) {
-				break;
-			}
+    int newSize = 0;
 
-			// Line is too long
-			// Try again with position = position + line offset,
-			// i.e. ignore line and go to next one
-			// TODO: Shouldn't it be LOG.error instead ??
-			// LOG.info("Skipped line of size " + newSize + " at pos "
-			// + (pos - newSize));
-		}
+    // Make sure we get at least one record that starts in this Split
+    while (pos < end) {
 
-		if (newSize == 0) {
-			// We've reached end of Split
-			key = null;
-			value = null;
-			return false;
-		} else {
-			// Tell Hadoop a new line has been found
-			// key / value will be retrieved by
-			// getCurrentKey getCurrentValue methods
-			return true;
-		}
-	}
-	
-	private int readNext(Text text, int maxLineLength, int maxBytesToConsume)
-			throws IOException {
+      // Read first line and store its content to "value"
+      newSize = readNext(value, maxLineLength,
+          Math.max((int) Math.min(Integer.MAX_VALUE, end - pos), maxLineLength));
 
-		int offset = 0;
-		text.clear();
-		Text tmp = new Text();
+      // No byte read, seems that we reached end of Split
+      // Break and return false (no key / value)
+      if (newSize == 0) {
+        break;
+      }
 
-		for (int i = 0; i < maxBytesToConsume; i++) {
+      // Line is read, new position is set
+      pos += newSize;
 
-			int offsetTmp = in.readLine(tmp, maxLineLength, maxBytesToConsume);
-			offset += offsetTmp;
-			Matcher m = delimiterPattern.matcher(tmp.toString());
+      // Line is lower than Maximum record line size
+      // break and return true (found key / value)
+      if (newSize < maxLineLength) {
+        break;
+      }
 
-			// End of File
-			if (offsetTmp == 0) {
-				break;
-			}
+      // Line is too long
+      // Try again with position = position + line offset,
+      // i.e. ignore line and go to next one
+      // TODO: Shouldn't it be LOG.error instead ??
+      // LOG.info("Skipped line of size " + newSize + " at pos "
+      // + (pos - newSize));
+    }
 
-			if (m.matches()) {
-				// Record delimiter
-				break;
-			} else {
-				// Append value to record
-				text.append(EOL.getBytes(), 0, EOL.getLength());
-				text.append(tmp.getBytes(), 0, tmp.getLength());
-			}
-		}
-		return offset;
-	}
+    if (newSize == 0) {
+      // We've reached end of Split
+      key = null;
+      value = null;
+      return false;
+    } else {
+      // Tell Hadoop a new line has been found
+      // key / value will be retrieved by
+      // getCurrentKey getCurrentValue methods
+      return true;
+    }
+  }
+
+  private int readNext(Text text, int maxLineLength, int maxBytesToConsume) throws IOException {
+
+    int offset = 0;
+    text.clear();
+    Text tmp = new Text();
+
+    for (int i = 0; i < maxBytesToConsume; i++) {
+
+      int offsetTmp = in.readLine(tmp, maxLineLength, maxBytesToConsume);
+      offset += offsetTmp;
+      Matcher m = delimiterPattern.matcher(tmp.toString());
+
+      // End of File
+      if (offsetTmp == 0) {
+        break;
+      }
+
+      if (m.matches()) {
+        // Record delimiter
+        break;
+      } else {
+        // Append value to record
+        text.append(EOL.getBytes(), 0, EOL.getLength());
+        text.append(tmp.getBytes(), 0, tmp.getLength());
+      }
+    }
+    return offset;
+  }
 }

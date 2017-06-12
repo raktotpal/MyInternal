@@ -7,11 +7,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Properties;
-
-import kafka.javaapi.producer.Producer;
-import kafka.producer.KeyedMessage;
-import kafka.producer.ProducerConfig;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
@@ -20,213 +15,197 @@ import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 public class ParseJSONStream {
-	
-//	static Properties props = new Properties();
-//	static ProducerConfig config = new ProducerConfig(props);
-//
-//	static Producer<String, String> producer = new Producer<String, String>(config);
-	
 
-	public static void main(String[] args) throws MalformedURLException,
-			IOException, JSONException {
+  // static Properties props = new Properties();
+  // static ProducerConfig config = new ProducerConfig(props);
+  //
+  // static Producer<String, String> producer = new Producer<String,
+  // String>(config);
 
-		// props.put("metadata.broker.list", "broker1:9092");
-		// props.put("request.required.acks", "1");
+  public static void main(String[] args) throws MalformedURLException, IOException, JSONException {
 
-		String streamUrl = args[0];
-		String accessToken = args[1];
+    // props.put("metadata.broker.list", "broker1:9092");
+    // props.put("request.required.acks", "1");
 
-		// String topicToPublish = args[2];
+    String streamUrl = args[0];
+    String accessToken = args[1];
 
-		URL url = new URL(streamUrl);
+    // String topicToPublish = args[2];
 
-		HttpURLConnection connection = null;
+    URL url = new URL(streamUrl);
 
-		while (true) {
-			connection = (HttpURLConnection) url.openConnection();
-			connection.setReadTimeout(1000 * 60 * 60);
-			// connection.setConnectTimeout(1000 * 10);
+    HttpURLConnection connection = null;
 
-			if (accessToken != null) {
-				connection.setRequestProperty("token", accessToken);
-			}
+    while (true) {
+      connection = (HttpURLConnection) url.openConnection();
+      connection.setReadTimeout(1000 * 60 * 60);
+      // connection.setConnectTimeout(1000 * 10);
 
-			// connection.setRequestProperty("Accept-Encoding", "gzip");
+      if (accessToken != null) {
+        connection.setRequestProperty("token", accessToken);
+      }
 
-			if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-				throw new IOException(connection.getResponseMessage() + " ("
-						+ connection.getResponseCode() + ")");
-			}
+      // connection.setRequestProperty("Accept-Encoding", "gzip");
 
-			InputStream inputStream = connection.getInputStream();
+      if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+        throw new IOException(connection.getResponseMessage() + " (" + connection.getResponseCode()
+            + ")");
+      }
 
-			BufferedReader streamReader = new BufferedReader(
-					new InputStreamReader(inputStream, "UTF-8"));
+      InputStream inputStream = connection.getInputStream();
 
-			StringBuilder responseStrBuilder = new StringBuilder();
+      BufferedReader streamReader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
 
-			String inputStr;
-			while ((inputStr = streamReader.readLine()) != null)
-				responseStrBuilder.append(inputStr);
+      StringBuilder responseStrBuilder = new StringBuilder();
 
-			
-			
-			// System.out.println(responseStrBuilder.toString());
-			JSONObject jsonObject = new JSONObject(
-					responseStrBuilder.toString());
+      String inputStr;
+      while ((inputStr = streamReader.readLine()) != null)
+        responseStrBuilder.append(inputStr);
 
-			System.out.println(jsonObject.toString());
-		}
+      // System.out.println(responseStrBuilder.toString());
+      JSONObject jsonObject = new JSONObject(responseStrBuilder.toString());
 
-		// producer.close();
-	}
-	
-	public static void main1(String[] args) throws MalformedURLException,
-			IOException {
+      System.out.println(jsonObject.toString());
+    }
 
-//		props.put("metadata.broker.list", "broker1:9092");
-//		props.put("request.required.acks", "1");
+    // producer.close();
+  }
 
-		String streamUrl = args[0];
-		String accessToken = args[1];
-		
-//		String topicToPublish = args[2];
+  public static void main1(String[] args) throws MalformedURLException, IOException {
 
-		StringBuffer sb = new StringBuffer("{");
+    // props.put("metadata.broker.list", "broker1:9092");
+    // props.put("request.required.acks", "1");
 
-		URL url = new URL(streamUrl);
+    String streamUrl = args[0];
+    String accessToken = args[1];
 
-		HttpURLConnection connection = null;
+    // String topicToPublish = args[2];
 
-		connection = (HttpURLConnection) url.openConnection();
-		connection.setReadTimeout(1000 * 60 * 60);
-		// connection.setConnectTimeout(1000 * 10);
+    StringBuffer sb = new StringBuffer("{");
 
-		if (accessToken != null) {
-			connection.setRequestProperty("token", accessToken);
-		}
+    URL url = new URL(streamUrl);
 
-		// connection.setRequestProperty("Accept-Encoding", "gzip");
+    HttpURLConnection connection = null;
 
-		if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-			throw new IOException(connection.getResponseMessage() + " ("
-					+ connection.getResponseCode() + ")");
-		}
+    connection = (HttpURLConnection) url.openConnection();
+    connection.setReadTimeout(1000 * 60 * 60);
+    // connection.setConnectTimeout(1000 * 10);
 
-		InputStream inputStream = connection.getInputStream();
+    if (accessToken != null) {
+      connection.setRequestProperty("token", accessToken);
+    }
 
-		// get an instance of the json parser from the json factory
-		JsonFactory factory = new JsonFactory();
-		JsonParser parser = factory.createJsonParser(inputStream);
+    // connection.setRequestProperty("Accept-Encoding", "gzip");
 
-		// continue parsing the token till the end of input is reached
-		while (!parser.isClosed()) {
-			// get the token
-			JsonToken token = parser.nextToken();
-			// if its the last token then we are done
-			// we want to look for a field that says dataset
+    if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+      throw new IOException(connection.getResponseMessage() + " (" + connection.getResponseCode()
+          + ")");
+    }
 
-				
-			if (token != null && JsonToken.FIELD_NAME.equals(token)
-					&& "events".equals(parser.getCurrentName())) {
-				// we are entering the datasets now. The first token should be
-				// start of array
-				token = parser.nextToken();
-				if (!JsonToken.START_ARRAY.equals(token)) {
-					break;
-				}
-				// each element of the array is an album so the next token
-				// should be {
-				token = parser.nextToken();
-				if (!JsonToken.START_OBJECT.equals(token)) {
-					break;
-				}
-				
-				//sb.append(parser.getText());
+    InputStream inputStream = connection.getInputStream();
 
-				// we are now looking for a field that says "album_title". We
-				// continue looking till we find all such fields. This is
-				// probably not a best way to parse this json, but this will
-				// suffice for this example.
-				while (true) {
-					token = parser.nextToken();
-					
-					if (parser.getCurrentName() != null && parser.getCurrentName().equalsIgnoreCase("events") && parser.getText().equalsIgnoreCase("}")) {
-						break;
-					}
+    // get an instance of the json parser from the json factory
+    JsonFactory factory = new JsonFactory();
+    JsonParser parser = factory.createJsonParser(inputStream);
 
-					if (token != null && parser.getText().equalsIgnoreCase("rid")) {
+    // continue parsing the token till the end of input is reached
+    while (!parser.isClosed()) {
+      // get the token
+      JsonToken token = parser.nextToken();
+      // if its the last token then we are done
+      // we want to look for a field that says dataset
 
-						if (sb.length() > 1)
-							sb.deleteCharAt(sb.length() - 1).deleteCharAt(
-									sb.length() - 1);
-						
-						String msgToPublish = sb.toString().replace(",}", "}").replace(",]", "]");
+      if (token != null && JsonToken.FIELD_NAME.equals(token)
+          && "events".equals(parser.getCurrentName())) {
+        // we are entering the datasets now. The first token should be
+        // start of array
+        token = parser.nextToken();
+        if (!JsonToken.START_ARRAY.equals(token)) {
+          break;
+        }
+        // each element of the array is an album so the next token
+        // should be {
+        token = parser.nextToken();
+        if (!JsonToken.START_OBJECT.equals(token)) {
+          break;
+        }
 
-						System.out.println(msgToPublish);
-						
-						
-//						KeyedMessage<String, String> data = new KeyedMessage<String, String>(
-//								topicToPublish, msgToPublish);
-//						producer.send(data);
-						
-						
+        // sb.append(parser.getText());
 
-						sb.setLength(1);
+        // we are now looking for a field that says "album_title". We
+        // continue looking till we find all such fields. This is
+        // probably not a best way to parse this json, but this will
+        // suffice for this example.
+        while (true) {
+          token = parser.nextToken();
 
-						System.out
-								.println("***********************************************************************************");
-						continue;
-					}
+          if (parser.getCurrentName() != null && parser.getCurrentName().equalsIgnoreCase("events")
+              && parser.getText().equalsIgnoreCase("}")) {
+            break;
+          }
 
-					if (token == null) {
-						break;
-					}
+          if (token != null && parser.getText().equalsIgnoreCase("rid")) {
 
-					if (parser.getCurrentName() != null) {
-						if (parser.getText().equalsIgnoreCase("{")
-								|| parser.getText().equalsIgnoreCase("[")) {
-							sb.append("\"" + parser.getCurrentName() + "\":"
-									+ parser.getText());
-							continue;
-						}
+            if (sb.length() > 1)
+              sb.deleteCharAt(sb.length() - 1).deleteCharAt(sb.length() - 1);
 
-						if (parser.getText().equalsIgnoreCase("}")
-								|| parser.getText().equalsIgnoreCase("]")) {
-							sb.append(parser.getText() + ",");
-							continue;
-						}
-					} else {
-						if (parser.getText().equalsIgnoreCase("{")
-								|| parser.getText().equalsIgnoreCase("[")) {
-							sb.append(parser.getText());
-							continue;
-						}
+            String msgToPublish = sb.toString().replace(",}", "}").replace(",]", "]");
 
-						if (parser.getText().equalsIgnoreCase("}")
-								|| parser.getText().equalsIgnoreCase("]")) {
-							sb.append(parser.getText() + ",");
-							continue;
-						}
-					}
+            System.out.println(msgToPublish);
 
-					if (parser.getCurrentName() == null) {
-						sb.append(parser.getText() + ",");
-					} else {
-						if (!parser.getCurrentName().equalsIgnoreCase(
-								parser.getText())) {
-							sb.append("\"" + parser.getCurrentName() + "\":\""
-									+ parser.getText() + "\",");
-						}
+            // KeyedMessage<String, String> data = new KeyedMessage<String,
+            // String>(
+            // topicToPublish, msgToPublish);
+            // producer.send(data);
 
-					}
+            sb.setLength(1);
 
-				}
+            System.out
+                .println("***********************************************************************************");
+            continue;
+          }
 
-			}
+          if (token == null) {
+            break;
+          }
 
-		}
+          if (parser.getCurrentName() != null) {
+            if (parser.getText().equalsIgnoreCase("{") || parser.getText().equalsIgnoreCase("[")) {
+              sb.append("\"" + parser.getCurrentName() + "\":" + parser.getText());
+              continue;
+            }
 
-//		producer.close();
-	}
+            if (parser.getText().equalsIgnoreCase("}") || parser.getText().equalsIgnoreCase("]")) {
+              sb.append(parser.getText() + ",");
+              continue;
+            }
+          } else {
+            if (parser.getText().equalsIgnoreCase("{") || parser.getText().equalsIgnoreCase("[")) {
+              sb.append(parser.getText());
+              continue;
+            }
+
+            if (parser.getText().equalsIgnoreCase("}") || parser.getText().equalsIgnoreCase("]")) {
+              sb.append(parser.getText() + ",");
+              continue;
+            }
+          }
+
+          if (parser.getCurrentName() == null) {
+            sb.append(parser.getText() + ",");
+          } else {
+            if (!parser.getCurrentName().equalsIgnoreCase(parser.getText())) {
+              sb.append("\"" + parser.getCurrentName() + "\":\"" + parser.getText() + "\",");
+            }
+
+          }
+
+        }
+
+      }
+
+    }
+
+    // producer.close();
+  }
 }

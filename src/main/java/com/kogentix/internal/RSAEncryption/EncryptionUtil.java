@@ -65,14 +65,12 @@ public class EncryptionUtil {
       publicKeyFile.createNewFile();
 
       // Saving the Public key in a file
-      ObjectOutputStream publicKeyOS = new ObjectOutputStream(
-          new FileOutputStream(publicKeyFile));
+      ObjectOutputStream publicKeyOS = new ObjectOutputStream(new FileOutputStream(publicKeyFile));
       publicKeyOS.writeObject(key.getPublic());
       publicKeyOS.close();
 
       // Saving the Private key in a file
-      ObjectOutputStream privateKeyOS = new ObjectOutputStream(
-          new FileOutputStream(privateKeyFile));
+      ObjectOutputStream privateKeyOS = new ObjectOutputStream(new FileOutputStream(privateKeyFile));
       privateKeyOS.writeObject(key.getPrivate());
       privateKeyOS.close();
     } catch (Exception e) {
@@ -151,8 +149,7 @@ public class EncryptionUtil {
   /**
    * Test the EncryptionUtil
    */
-  @SuppressWarnings("resource")
-public static void main(String[] args) {
+  @SuppressWarnings("resource") public static void main(String[] args) {
 
     try {
 
@@ -178,7 +175,7 @@ public static void main(String[] args) {
 
       // Printing the Original, Encrypted and Decrypted Text
       System.out.println("Original: " + originalText);
-      System.out.println("Encrypted: " +cipherText.toString());
+      System.out.println("Encrypted: " + cipherText.toString());
       System.out.println("Decrypted: " + plainText);
 
     } catch (Exception e) {

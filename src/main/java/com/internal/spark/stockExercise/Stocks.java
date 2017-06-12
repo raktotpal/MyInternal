@@ -15,62 +15,55 @@ import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 
-
 public class Stocks {
-	public static void main(String[] args) {
-		SparkConf conf = new SparkConf().setMaster("local").setAppName(
-				"RPAL-SPARK-SQL");
+  public static void main(String[] args) {
+    SparkConf conf = new SparkConf().setMaster("local").setAppName("RPAL-SPARK-SQL");
 
-		JavaSparkContext sc = new JavaSparkContext(conf);
-		
-		// SparkContext sc = new SparkContext(conf);
-		// HiveContext hiveContext = new HiveContext(sc);
-		
-		SQLContext sqlContext = new SQLContext(sc);
+    JavaSparkContext sc = new JavaSparkContext(conf);
 
-		
+    // SparkContext sc = new SparkContext(conf);
+    // HiveContext hiveContext = new HiveContext(sc);
 
-		JavaRDD<String> people = sc
-				.textFile("hdfs://localhost/user/bedrock/rpal/stocks/");
+    SQLContext sqlContext = new SQLContext(sc);
 
-		
-		// The schema is encoded in a string
-		String schemaString = people.take(1).get(0);
-		
-		System.out.println("::::::::::::::::::::: " + schemaString);
+    JavaRDD<String> people = sc.textFile("hdfs://localhost/user/bedrock/rpal/stocks/");
 
-		// Generate the schema based on the string of schema
-		List<StructField> fields = new ArrayList<StructField>();
-		for (String fieldName: schemaString.split(",")) {
-		  fields.add(DataTypes.createStructField(fieldName, DataTypes.StringType, true));
-		  System.out.println(":::::::::::::::::::::>>>>>>>>>>> " + fieldName);
-		}
-		StructType schema = DataTypes.createStructType(fields);
-		System.out.println("**************************************************************");
+    // The schema is encoded in a string
+    String schemaString = people.take(1).get(0);
 
-		// Convert records of the RDD (people) to Rows.
-		JavaRDD<Row> rowRDD = people.map(
-		  new Function<String, Row>() {
-			private static final long serialVersionUID = 1L;
+    System.out.println("::::::::::::::::::::: " + schemaString);
 
-			public Row call(String record) throws Exception {
-		      Object[] fields_obj = record.split(",");
-		      return RowFactory.create(fields_obj);
-		    }
-		  });
+    // Generate the schema based on the string of schema
+    List<StructField> fields = new ArrayList<StructField>();
+    for (String fieldName : schemaString.split(",")) {
+      fields.add(DataTypes.createStructField(fieldName, DataTypes.StringType, true));
+      System.out.println(":::::::::::::::::::::>>>>>>>>>>> " + fieldName);
+    }
+    StructType schema = DataTypes.createStructType(fields);
+    System.out.println("**************************************************************");
 
-		// Apply the schema to the RDD.
-		DataFrame peopleDataFrame = sqlContext.createDataFrame(rowRDD, schema);
+    // Convert records of the RDD (people) to Rows.
+    JavaRDD<Row> rowRDD = people.map(new Function<String, Row>() {
+      private static final long serialVersionUID = 1L;
 
-		// Register the DataFrame as a table.
-		peopleDataFrame.registerTempTable("people");
-		
-		System.out.println("#########################################################");
-		peopleDataFrame.printSchema();
-		
-		// SQL can be run over RDDs that have been registered as tables.
-		DataFrame results = sqlContext.sql("SELECT * FROM people");
-		
-		results.show();
-	}
+      public Row call(String record) throws Exception {
+        Object[] fields_obj = record.split(",");
+        return RowFactory.create(fields_obj);
+      }
+    });
+
+    // Apply the schema to the RDD.
+    DataFrame peopleDataFrame = sqlContext.createDataFrame(rowRDD, schema);
+
+    // Register the DataFrame as a table.
+    peopleDataFrame.registerTempTable("people");
+
+    System.out.println("#########################################################");
+    peopleDataFrame.printSchema();
+
+    // SQL can be run over RDDs that have been registered as tables.
+    DataFrame results = sqlContext.sql("SELECT * FROM people");
+
+    results.show();
+  }
 }
