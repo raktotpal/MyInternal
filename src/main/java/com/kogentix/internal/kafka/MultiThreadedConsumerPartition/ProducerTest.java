@@ -21,7 +21,7 @@ public class ProducerTest {
     // String msg = (String) args[0];
     for (int i = 0;; i++) {
       System.out.println("in loop");
-      String msg = "Trying Producer in" + i + System.currentTimeMillis();
+      String msg = "Trying Producer in " + i + System.currentTimeMillis();
       producer.send(new ProducerRecord<String, String>("rpal-multi-part", msg));
       TimeUnit.SECONDS.sleep(1);
     }
