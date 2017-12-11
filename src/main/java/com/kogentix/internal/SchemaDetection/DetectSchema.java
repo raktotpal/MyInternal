@@ -29,8 +29,8 @@ public class DetectSchema {
   static HiveDBConnector hiveConnector1 = new HiveDBConnector();
   static HiveDBConnector hiveConnector2 = new HiveDBConnector();
 
-  public static void main(String[] args) throws JSONException, FileNotFoundException,
-      ClassNotFoundException, SQLException {
+  public static void main(String[] args)
+      throws JSONException, FileNotFoundException, ClassNotFoundException, SQLException {
 
     PropertyConfigurator.configure(System.getProperty("log4j.configuration"));
 
@@ -114,8 +114,8 @@ public class DetectSchema {
     }
     LOG.info("----->> " + jsonObj.toString());
 
-    sbForSchema.append(") ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LOCATION '" + fileLocInHDFS
-        + "'");
+    sbForSchema
+        .append(") ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' LOCATION '" + fileLocInHDFS + "'");
 
     try {
       hiveConnector.createConnection();
@@ -135,21 +135,21 @@ public class DetectSchema {
             + " oooooooooooooooo " + testResult.getString(2));
 
         hiveConnector1.createConnection();
-        ResultSet rs = hiveConnector1.executeQuery("SELECT " + testResult.getString(1) + " FROM "
-            + hiveTableName);
+        ResultSet rs = hiveConnector1
+            .executeQuery("SELECT " + testResult.getString(1) + " FROM " + hiveTableName);
 
         while (rs.next()) {
           String columnENtry = rs.getString(1);
 
           hiveConnector2.createConnection();
-          ResultSet lookupSet = hiveConnector2.executeQuery("SELECT predictedcolumn, score FROM "
-              + lookUpTableInHive + " WHERE columnentry = '" + columnENtry + "' AND datatype = '"
-              + testResult.getString(2) + "'");
+          ResultSet lookupSet = hiveConnector2.executeQuery(
+              "SELECT predictedcolumn, score FROM " + lookUpTableInHive + " WHERE columnentry = '"
+                  + columnENtry + "' AND datatype = '" + testResult.getString(2) + "'");
 
           if (lookupSet.next()) {
             if (scoreCard.containsKey(lookupSet.getString(1))) {
-              scoreCard.put(lookupSet.getString(1), scoreCard.get(lookupSet.getString(1))
-                  + lookupSet.getInt(2));
+              scoreCard.put(lookupSet.getString(1),
+                  scoreCard.get(lookupSet.getString(1)) + lookupSet.getInt(2));
             } else {
               scoreCard.put(lookupSet.getString(1), lookupSet.getInt(2));
             }
@@ -163,8 +163,8 @@ public class DetectSchema {
         while (it.hasNext()) {
           Map.Entry pair = (Map.Entry) it.next();
 
-          System.out.println(pair.getKey() + " =<>==<>==<>==<>==<>==<>==<>==<>==<>==<>= "
-              + pair.getValue());
+          System.out.println(
+              pair.getKey() + " =<>==<>==<>==<>==<>==<>==<>==<>==<>==<>= " + pair.getValue());
         }
 
       }

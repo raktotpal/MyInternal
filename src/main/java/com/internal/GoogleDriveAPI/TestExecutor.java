@@ -25,30 +25,22 @@ import com.google.api.services.drive.model.FileList;
  * Turn on the Drive API
  * 
  * <ol>
- * <li>
- * Use this wizard to create or select a project in the Google Developers
+ * <li>Use this wizard to create or select a project in the Google Developers
  * Console and automatically turn on the API.
- * <li>
- * Click Continue, then Go to credentials.
- * <li>
- * On the Add credentials to your project page, click the Cancel button.
- * <li>
- * At the top of the page, select the OAuth consent screen tab.
- * <li>
- * Select an Email address, enter a Product name if not already set, and click
- * the Save button.
- * <li>
- * Select the Credentials tab, click the Create credentials button and select
- * OAuth client ID.
- * <li>
- * Select the application type Other, enter the name "Drive API Quickstart", and
- * click the Create button.
- * <li>
- * Click OK to dismiss the resulting dialog.
- * <li>
- * Click the file_download (Download JSON) button to the right of the client ID.
- * <li>
- * Move this file to your working directory and rename it client_secret.json.
+ * <li>Click Continue, then Go to credentials.
+ * <li>On the Add credentials to your project page, click the Cancel button.
+ * <li>At the top of the page, select the OAuth consent screen tab.
+ * <li>Select an Email address, enter a Product name if not already set, and
+ * click the Save button.
+ * <li>Select the Credentials tab, click the Create credentials button and
+ * select OAuth client ID.
+ * <li>Select the application type Other, enter the name "Drive API Quickstart",
+ * and click the Create button.
+ * <li>Click OK to dismiss the resulting dialog.
+ * <li>Click the file_download (Download JSON) button to the right of the client
+ * ID.
+ * <li>Move this file to your working directory and rename it
+ * client_secret.json.
  * 
  * @author RAKTOTPAL
  *
@@ -98,7 +90,7 @@ public class TestExecutor {
     // Build flow and trigger user authorization request.
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(HTTP_TRANSPORT,
         JSON_FACTORY, clientSecrets, SCOPES).setDataStoreFactory(DATA_STORE_FACTORY)
-        .setAccessType("offline").build();
+            .setAccessType("offline").build();
     Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver())
         .authorize("user");
     System.out.println("Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
@@ -113,8 +105,8 @@ public class TestExecutor {
    */
   public static Drive getDriveService() throws Exception {
     Credential credential = authorize();
-    return new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(
-        APPLICATION_NAME).build();
+    return new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+        .setApplicationName(APPLICATION_NAME).build();
   }
 
   public static void main(String[] args) throws Exception {
@@ -138,18 +130,12 @@ public class TestExecutor {
   /**
    * Insert new file.
    *
-   * @param service
-   *          Drive API service instance.
-   * @param title
-   *          Title of the file to insert, including the extension.
-   * @param description
-   *          Description of the file to insert.
-   * @param parentId
-   *          Optional parent folder's ID.
-   * @param mimeType
-   *          MIME type of the file to insert.
-   * @param filename
-   *          Filename of the file to insert.
+   * @param service Drive API service instance.
+   * @param title Title of the file to insert, including the extension.
+   * @param description Description of the file to insert.
+   * @param parentId Optional parent folder's ID.
+   * @param mimeType MIME type of the file to insert.
+   * @param filename Filename of the file to insert.
    * @return Inserted file metadata if successful, {@code null} otherwise.
    */
   private static File insertFile(Drive service, String description, String parentId,

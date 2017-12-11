@@ -33,10 +33,8 @@ public class unZipunTar {
    * The output file is created in the output folder, having the same name as
    * the input file, minus the '.tar' extension.
    * 
-   * @param inputFile
-   *          the input .tar file
-   * @param outputDir
-   *          the output directory file.
+   * @param inputFile the input .tar file
+   * @param outputDir the output directory file.
    * 
    */
   private static List<File> unTar(final File inputFile, final File outputDir)
@@ -59,8 +57,8 @@ public class unZipunTar {
           System.out.println(String.format("Attempting to create output directory %s.",
               outputFile.getAbsolutePath()));
           if (!outputFile.mkdirs()) {
-            throw new IllegalStateException(String.format("Couldn't create directory %s.",
-                outputFile.getAbsolutePath()));
+            throw new IllegalStateException(
+                String.format("Couldn't create directory %s.", outputFile.getAbsolutePath()));
           }
         }
       } else {
@@ -82,10 +80,8 @@ public class unZipunTar {
    * The output file is created in the output folder, having the same name as
    * the input file, minus the '.gz' extension.
    * 
-   * @param inputFile
-   *          the input .gz file
-   * @param outputDir
-   *          the output directory file.
+   * @param inputFile the input .gz file
+   * @param outputDir the output directory file.
    *
    */
   private static File unGzip(final File inputFile, final File outputDir)
@@ -94,8 +90,8 @@ public class unZipunTar {
     System.out.println(String.format("Ungzipping %s to dir %s.", inputFile.getAbsolutePath(),
         outputDir.getAbsolutePath()));
 
-    final File outputFile = new File(outputDir, inputFile.getName().substring(0,
-        inputFile.getName().length() - 3));
+    final File outputFile = new File(outputDir,
+        inputFile.getName().substring(0, inputFile.getName().length() - 3));
 
     final GZIPInputStream in = new GZIPInputStream(new FileInputStream(inputFile));
     final FileOutputStream out = new FileOutputStream(outputFile);

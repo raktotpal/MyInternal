@@ -19,8 +19,8 @@ public class TextParser {
     // detecting the file type
     BodyContentHandler handler = new BodyContentHandler();
     Metadata metadata = new Metadata();
-    FileInputStream inputstream = new FileInputStream(new File(
-        "C:\\Users\\RAKTOTPAL\\Desktop\\TICKET HYD-GHY\\NF7202055814469.Invoice.pdf"));
+    FileInputStream inputstream = new FileInputStream(
+        new File("C:\\Users\\RAKTOTPAL\\Desktop\\TICKET HYD-GHY\\NF7202055814469.Invoice.pdf"));
 
     ParseContext pcontext = new ParseContext();
 

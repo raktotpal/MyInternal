@@ -48,8 +48,8 @@ public class ParseJSONStream {
       // connection.setRequestProperty("Accept-Encoding", "gzip");
 
       if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-        throw new IOException(connection.getResponseMessage() + " (" + connection.getResponseCode()
-            + ")");
+        throw new IOException(
+            connection.getResponseMessage() + " (" + connection.getResponseCode() + ")");
       }
 
       InputStream inputStream = connection.getInputStream();
@@ -98,8 +98,8 @@ public class ParseJSONStream {
     // connection.setRequestProperty("Accept-Encoding", "gzip");
 
     if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-      throw new IOException(connection.getResponseMessage() + " (" + connection.getResponseCode()
-          + ")");
+      throw new IOException(
+          connection.getResponseMessage() + " (" + connection.getResponseCode() + ")");
     }
 
     InputStream inputStream = connection.getInputStream();
@@ -160,8 +160,8 @@ public class ParseJSONStream {
 
             sb.setLength(1);
 
-            System.out
-                .println("***********************************************************************************");
+            System.out.println(
+                "***********************************************************************************");
             continue;
           }
 

@@ -21,8 +21,8 @@ public class sparkSQLCSVExample {
     SQLContext sqlContext = new SQLContext(ctx);
 
     // Load a text file and convert each line to a JavaBean.
-    JavaRDD<Person> people = ctx.textFile("/home/bedrock/rpal/people.txt").map(
-        new Function<String, Person>() {
+    JavaRDD<Person> people = ctx.textFile("/home/bedrock/rpal/people.txt")
+        .map(new Function<String, Person>() {
           private static final long serialVersionUID = -9190778346995865364L;
 
           public Person call(String line) throws Exception {

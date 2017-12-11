@@ -35,20 +35,20 @@ public class SparkTest {
       }
     });
     // Transform into word and count.
-    JavaPairRDD<String, Integer> counts = words.mapToPair(
-        new PairFunction<String, String, Integer>() {
+    JavaPairRDD<String, Integer> counts = words
+        .mapToPair(new PairFunction<String, String, Integer>() {
           private static final long serialVersionUID = 1L;
 
           public Tuple2<String, Integer> call(String x) {
             return new Tuple2<String, Integer>(x, 1);
           }
         }).reduceByKey(new Function2<Integer, Integer, Integer>() {
-      private static final long serialVersionUID = 1L;
+          private static final long serialVersionUID = 1L;
 
-      public Integer call(Integer x, Integer y) {
-        return x + y;
-      }
-    });
+          public Integer call(Integer x, Integer y) {
+            return x + y;
+          }
+        });
     // Save the word count back out to a text file, causing evaluation.
     counts.saveAsTextFile(outputFile);
 
@@ -78,20 +78,20 @@ public class SparkTest {
     });
 
     // Transform into word and count.
-    JavaPairRDD<String, Integer> counts = words.mapToPair(
-        new PairFunction<String, String, Integer>() {
+    JavaPairRDD<String, Integer> counts = words
+        .mapToPair(new PairFunction<String, String, Integer>() {
           private static final long serialVersionUID = 1L;
 
           public Tuple2<String, Integer> call(String x) {
             return new Tuple2<String, Integer>(x, 1);
           }
         }).reduceByKey(new Function2<Integer, Integer, Integer>() {
-      private static final long serialVersionUID = 1L;
+          private static final long serialVersionUID = 1L;
 
-      public Integer call(Integer x, Integer y) {
-        return x + y;
-      }
-    });
+          public Integer call(Integer x, Integer y) {
+            return x + y;
+          }
+        });
 
     // Save the word count back out to a text file, causing evaluation.
     counts.saveAsTextFile(outputFile);

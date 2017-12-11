@@ -18,8 +18,8 @@ public class MultiConsumers {
   private ExecutorService executor;
 
   public MultiConsumers(String a_zookeeper, String a_groupId, String a_topic) {
-    consumer = kafka.consumer.Consumer.createJavaConsumerConnector(createConsumerConfig(
-        a_zookeeper, a_groupId));
+    consumer = kafka.consumer.Consumer
+        .createJavaConsumerConnector(createConsumerConfig(a_zookeeper, a_groupId));
     this.topic = a_topic;
   }
 

@@ -27,8 +27,8 @@ public class KafkaProducerOLD {
     for (int i = 1; i <= 1000; i++) {
       String msg = date + " This is message " + i;
       System.out.println(msg);
-      KeyedMessage<String, String> data = new KeyedMessage<String, String>(topic,
-          String.valueOf(i), msg);
+      KeyedMessage<String, String> data = new KeyedMessage<String, String>(topic, String.valueOf(i),
+          msg);
       producer.send(data);
     }
     producer.close();

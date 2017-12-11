@@ -70,7 +70,8 @@ public class EncryptionUtil {
       publicKeyOS.close();
 
       // Saving the Private key in a file
-      ObjectOutputStream privateKeyOS = new ObjectOutputStream(new FileOutputStream(privateKeyFile));
+      ObjectOutputStream privateKeyOS = new ObjectOutputStream(
+          new FileOutputStream(privateKeyFile));
       privateKeyOS.writeObject(key.getPrivate());
       privateKeyOS.close();
     } catch (Exception e) {
@@ -98,10 +99,8 @@ public class EncryptionUtil {
   /**
    * Encrypt the plain text using public key.
    * 
-   * @param text
-   *          : original plain text
-   * @param key
-   *          :The public key
+   * @param text : original plain text
+   * @param key :The public key
    * @return Encrypted text
    * @throws java.lang.Exception
    */
@@ -122,10 +121,8 @@ public class EncryptionUtil {
   /**
    * Decrypt text using private key.
    * 
-   * @param text
-   *          :encrypted text
-   * @param key
-   *          :The private key
+   * @param text :encrypted text
+   * @param key :The private key
    * @return plain text
    * @throws java.lang.Exception
    */

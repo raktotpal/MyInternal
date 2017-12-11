@@ -16,8 +16,8 @@ public class ParseJSON {
     // String str =
     // "[{\"name\":\"name1\",\"url\":\"url1\"},{\"name\":\"name2\",\"url\":\"url2\"}]";
 
-    FileInputStream fisTargetFile = new FileInputStream(new File(
-        "C:\\Users\\Raktotpal\\Desktop\\testJSON.txt"));
+    FileInputStream fisTargetFile = new FileInputStream(
+        new File("C:\\Users\\Raktotpal\\Desktop\\testJSON.txt"));
 
     String targetFileStr = IOUtils.toString(fisTargetFile, "UTF-8");
 

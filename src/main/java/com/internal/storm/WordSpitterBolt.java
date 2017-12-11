@@ -54,9 +54,8 @@ public class WordSpitterBolt implements IRichBolt {
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * backtype.storm.topology.IComponent#declareOutputFields(backtype.storm.topology
-   * .OutputFieldsDeclarer)
+   * @see backtype.storm.topology.IComponent#declareOutputFields(backtype.storm.
+   * topology .OutputFieldsDeclarer)
    * 
    * This method is similar to declareOutputFields() method in Spout-Program, it
    * declares that it is going to return word tuple for further processing

@@ -30,8 +30,8 @@ public class KafkaMultiThreadedConsumer {
 
       ConsumerIterator<byte[], byte[]> it = kfs.iterator();
       while (it.hasNext()) {
-        System.out.println(Thread.currentThread().getName() + " ::: " + tnum
-            + new String(it.next().message()));
+        System.out.println(
+            Thread.currentThread().getName() + " ::: " + tnum + new String(it.next().message()));
       }
     }
   }

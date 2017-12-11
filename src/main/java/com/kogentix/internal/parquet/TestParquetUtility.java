@@ -12,8 +12,8 @@ public class TestParquetUtility {
 
     Map<String, String> schemaAsMap = new HashMap<String, String>();
 
-    ParquetUtility.convertCsvToParquet(schemaAsMap, new File(
-        "C:\\Users\\RAKTOTPAL\\Desktop\\myTestToParquet.csv"), new File(
-        "C:\\Users\\RAKTOTPAL\\Desktop\\outputParquet.parquet"));
+    ParquetUtility.convertCsvToParquet(schemaAsMap,
+        new File("C:\\Users\\RAKTOTPAL\\Desktop\\myTestToParquet.csv"),
+        new File("C:\\Users\\RAKTOTPAL\\Desktop\\outputParquet.parquet"));
   }
 }

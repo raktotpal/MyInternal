@@ -65,9 +65,8 @@ public class LineReaderSpout implements IRichSpout {
   /*
    * (non-Javadoc)
    * 
-   * @see
-   * backtype.storm.topology.IComponent#declareOutputFields(backtype.storm.topology
-   * .OutputFieldsDeclarer)
+   * @see backtype.storm.topology.IComponent#declareOutputFields(backtype.storm.
+   * topology .OutputFieldsDeclarer)
    * 
    * This method declares that LineReaderSpout is going to emit line tuple
    */

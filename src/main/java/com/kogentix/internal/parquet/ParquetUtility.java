@@ -73,8 +73,8 @@ public class ParquetUtility {
     // getSchema(csvFile);
 
     if (outputParquetFile.exists()) {
-      throw new IOException("Output file " + outputParquetFile.getAbsolutePath()
-          + " already exists");
+      throw new IOException(
+          "Output file " + outputParquetFile.getAbsolutePath() + " already exists");
     }
 
     Path path = new Path(outputParquetFile.toURI());

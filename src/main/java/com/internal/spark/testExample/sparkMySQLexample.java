@@ -19,8 +19,8 @@ import scala.runtime.AbstractFunction0;
 import scala.runtime.AbstractFunction1;
 
 /**
- * Run as
- * "./spark-submit --jars <external jar> --class <Main-Class> --master <mode> <Application-jar>"
+ * Run as "./spark-submit --jars <external jar> --class <Main-Class> --master
+ * <mode> <Application-jar>"
  * 
  * @author Rpal
  *
@@ -37,8 +37,8 @@ public class sparkMySQLexample {
     DbConnection connection = new DbConnection("com.mysql.jdbc.Driver",
         "jdbc:mysql://localhost:3306/hive", "hive", "hive");
     JdbcRDD<Object[]> jdbcRDD = new JdbcRDD<Object[]>(context.sc(), connection,
-        "select * from hive.VERSION where VER_ID >= ? and VER_ID <= ?", 1, 1000, 1,
-        new MapResult(), ClassManifestFactory.fromClass(Object[].class));
+        "select * from hive.VERSION where VER_ID >= ? and VER_ID <= ?", 1, 1000, 1, new MapResult(),
+        ClassManifestFactory.fromClass(Object[].class));
 
     JavaRDD<Object[]> javaRDD = JavaRDD.fromRDD(jdbcRDD,
         ClassManifestFactory.fromClass(Object[].class));
@@ -64,7 +64,8 @@ class DbConnection extends AbstractFunction0<Connection> implements Serializable
   private String userName;
   private String password;
 
-  public DbConnection(String driverClassName, String connectionUrl, String userName, String password) {
+  public DbConnection(String driverClassName, String connectionUrl, String userName,
+      String password) {
     this.driverClassName = driverClassName;
     this.connectionUrl = connectionUrl;
     this.userName = userName;

@@ -55,8 +55,8 @@ public class upperEvalFunc extends EvalFunc<String> {
    */
   @Override public List<FuncSpec> getArgToFuncMapping() throws FrontendException {
     List<FuncSpec> funcList = new ArrayList<FuncSpec>();
-    funcList.add(new FuncSpec(this.getClass().getName(), new Schema(new Schema.FieldSchema(null,
-        DataType.CHARARRAY))));
+    funcList.add(new FuncSpec(this.getClass().getName(),
+        new Schema(new Schema.FieldSchema(null, DataType.CHARARRAY))));
     return funcList;
   }
 }

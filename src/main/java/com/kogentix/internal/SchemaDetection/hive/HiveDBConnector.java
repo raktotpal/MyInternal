@@ -171,8 +171,7 @@ public class HiveDBConnector implements IHiveDBConnector {
    * already loaded.
    * 
    * @param UDFName
-   * @param classname
-   *          Fully qualified class name where UDF resides
+   * @param classname Fully qualified class name where UDF resides
    * @throws SQLException
    */
   public void loadUdf(String UDFName, String classname) throws SQLException {

@@ -23,8 +23,8 @@ public class sparkHiveExample {
     Row[] results = sqlContext.sql("FROM sparkTableLOAD SELECT id, name").collect();
 
     for (Row xx : results) {
-      System.out.println("::::::::::::::::::::::::::::::::+++++++++++++++++++++++++ "
-          + xx.toString());
+      System.out
+          .println("::::::::::::::::::::::::::::::::+++++++++++++++++++++++++ " + xx.toString());
     }
   }
 }

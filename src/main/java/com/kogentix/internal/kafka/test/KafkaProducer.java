@@ -26,8 +26,8 @@ public class KafkaProducer {
     int i = 0;
     while (true) {
       String msg = "Hi I am Raktotpal";
-      KeyedMessage<String, String> data = new KeyedMessage<String, String>("rpal-multi-part", msg
-          + " ::: " + i);
+      KeyedMessage<String, String> data = new KeyedMessage<String, String>("rpal-multi-part",
+          msg + " ::: " + i);
       producer.send(data);
       i++;
       Thread.sleep(1000);
